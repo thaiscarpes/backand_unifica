@@ -1,19 +1,7 @@
-const location = {
-    id: 123, 
-    title: 'Mercovia',
-    description: 'Concessionaria do CUF',
-    image: 'locationofimage',
-    address: 'BR 127',
-    contact: {
-        email:'email@mercovia.com',
-        phone:'55123456789',
-        extension: '2039'
-    },
-    hours:{
-        first: ['08:00', '12:00'],
-        second: ['14:00', '18:00']
-    }
-}
+const mongoose = require('../config/database') //importando o banco de dados
+const Models = require('../config/models') //importando models
+
+const location = mongoose.model('Location', Models.locationModel)
 
 locationController = { 
 
@@ -29,12 +17,17 @@ locationController = {
         response.json(location)
     },    
 
-    createLocation : ( request, response ) => {
-        response.json({
-            message: 'Localização cadastrada com sucesso!',
-            id:123
-        })
-    },    
+    createLocation : async ( request, response ) => {
+        const {title, description, image, address, contact, workingHours} = request.body
+        try {
+            const newLocation = new location({title, description, image, address, contact, workingHours})
+            await newLocation.save()
+            response.status(201).json({message : 'Cadastro realizado com sucesso!'})
+        } catch (err) {
+            console.log(err)
+            response.status(500).json({message : 'Não foi possível realizar o cadastro!'})   
+        }
+    }, //função assíncrona para cadastrar os dados no banco de dados. 
 
     deleteLocation : ( request, response ) => {
         response.json({
@@ -48,4 +41,4 @@ locationController = {
     },
  }
 
-module.exports = locationController;
+module.exports = locationController
