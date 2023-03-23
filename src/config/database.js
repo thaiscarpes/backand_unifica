@@ -1,16 +1,17 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose'); //Importa o mongoose
+const dotenv = require('dotenv'); //Importa o env
 
-mongoose.connect(`mongodb+srv://thaisc:App2023@unifica.dve53jm.mongodb.net/?retryWrites=true&w=majority`), {
-    useNewUrlParser: true, 
+//Ativa o env
+dotenv.config();
+
+const uri = process.env.MONGODB_URI
+
+// Conexão com o banco de dados
+mongoose.connect(uri, {
+    useNewUrlParser: true,
     useUnifiedTopology: true
-}
-
-mongoose.connection.on( 'connected', () => {
-    console.log('Conectado ao Mongo com sucesso!')
-})
-
-mongoose.connection.on( 'error', (err) => {
-    console.log(`Ocorreu um erro ao conectar na base de dados!: ${err}`)
-})
-
-module.exports = mongoose
+  }).then(() => {
+    console.log('Mongo is UP!');
+  }).catch((err) => {
+    console.error('Error to connect with MongoDB:', err);
+});

@@ -1,27 +1,38 @@
-const express = require('express') //criar rotas e manipular solicitações http
-const router = express.Router() //objeto de roteador do express
-const locationController = require('./controllers/locationController') //import. o arq que contém as rotas da localização
+const express = require('express') //Importa o express
+const locationController = require('./controllers/locationController') //Importa o controller de localização
+const userController = require('./controllers/userController') //Importa o controller de usuarios
+const distanceController = require('./controllers/distanceController') //Importa o controller da distancia
+const router = express.Router() //Ativa o router para criar as rotas
 
-//Rotas
-//requisições: get(listar), post(cadastrar), put(editar), delete(deletar)
 
-//Server home
-router.get('/', locationController.serverHome )
+//Rota para mostrar todas as localizações
+router.get('/location', locationController.listAllLocations)
 
-//Listar todas as localizaçõeS
-router.get( '/location' , locationController.listAllLocations)
+//Rota para mostrar uma localização específica
+router.get('/location/:id', locationController.listLocation)
 
-//Listar uma localização
-router.get( '/location/:id' , locationController.listOneLocation)
+//Rota para cadastrar uma localização
+router.post('/location', locationController.createLocation)
 
-//Cadastrar uma localização
-router.post( '/location/' , locationController.createLocation)
+//Rota para Editar uma localização
+router.put('/location/:id', locationController.updateLocation)
 
-//Remover uma localização
-router.delete( '/location/:id' , locationController.deleteLocation)
+//Rota para remover uma localização
+router.delete('/location/:id', locationController.deleteLocation)
 
-//Editar uma localização
-router.put( '/location/:id' , locationController.updateLocation)
+//Rota para calcular a distância do local ate o usuário
+router.get('/distance/:id', distanceController.getLocationDistance)
 
-//exportar o objeto do roteador
+//Rota para listar os usuários
+router.get('/user', userController.listAllUsers)
+
+//Rota para adicionar um usuário
+router.post('/user/', userController.createUser)
+
+//Rota para editar um usuário
+router.put('/user/:id', userController.updateUser)
+
+//Rota para remover um usuário
+router.delete('/user/:id', userController.deleteUser)
+
 module.exports = router

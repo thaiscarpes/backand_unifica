@@ -1,19 +1,24 @@
-//importando pacotes
-const express = require('express') //criar rotas e manipular solicitações http
-const routes = require( './routes.js') //importando roteador
-const bodyParser = require('body-parser') //analisa os dados enviados no corpo de uma req. http(ex:json)
-const cors = require('cors') //mecanismo de segurança do navegador (somente front pode fazer requisição)
+const express = require('express') //Importa framework de roteamento
+const bodyParser = require('body-parser') //Importa verificador de dados do corpo de solicitações HTTP.
+const corsOptions = require('./cors') //Importa o cors
+const router = require('./routes') //Importa as rotas
 
+//Ativa o express
 const app = express()
-const port = process.env.PORT || 3030
 
-app.use(routes) //transforma o routes no middleware(pacote) com as rotas da aplicação
-app.use(bodyParser.urlencoded({extend:false})) //analisa somente os dados simples do corpo da solicitação
-app.use(bodyParser.json()) //adc no app p/ analisar o corpo da req. http como um obj json (transforma a req http em json)
-app.use(cors()) //permissão de diferentes origens no servidor
+//Ativa a política de segurança
+app.use(corsOptions)
 
+//Analisar dados de formulários HTML com a codificação application/x-www-form-urlencoded.
+app.use(bodyParser.urlencoded({extended: false}))
 
-//configurar servidor para escutar a porta configurada
-app.listen( port, () =>{
-    console.log(`Server listening on port ${port}`)
+//Analisar dados JSON enviados em solicitações HTTP.
+app.use(bodyParser.json())
+
+//Usa as rotas definidas
+app.use('/', router)
+
+//Escutar a porta 3333
+app.listen('3030', () => {
+    console.log('Server is UP')
 })

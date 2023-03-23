@@ -1,44 +1,111 @@
-const mongoose = require('../config/database') //importando o banco de dados
-const Models = require('../config/models') //importando models
+const database = require('../config/database')
+const model = require('../config/LocationModel')
 
-const location = mongoose.model('Location', Models.locationModel)
+const locationController = {
 
-locationController = { 
+    //Listar todas as localizações
+    listAllLocations : async (request, response) => {
 
-    serverHome : (request, response) => {
-        response.json('message: Bem vindo ao Unifica!')
+        await model.find({}).then((locations) => {
+            
+            response.status(200).json({ locations })
+            
+        }).catch((err) => {
+            
+            
+            response.status(500).json({ message: `Error: ${err}` })
+
+        })
     },
 
-    listAllLocations : ( request, response ) => {
-        response.json(location)
+    //Listar uma localização específica
+    listLocation : async (request, response) => {
+
+        const locationId = request.params.id
+
+        await model.findById(locationId).then((location) => {
+
+            response.status(200).json({ location })
+            
+        }).catch((err) => {
+            
+            
+            response.status(500).json({ message: `Error: ${err}` })
+
+        })
+
     },
 
-    listOneLocation : ( request, response ) => {
-        response.json(location)
-    },    
+    //Cadastrar uma localização
+    createLocation : async (request, response) => {
 
-    createLocation : async ( request, response ) => {
-        const {title, description, image, address, contact, workingHours} = request.body
-        try {
-            const newLocation = new location({title, description, image, address, contact, workingHours})
-            await newLocation.save()
-            response.status(201).json({message : 'Cadastro realizado com sucesso!'})
-        } catch (err) {
-            console.log(err)
-            response.status(500).json({message : 'Não foi possível realizar o cadastro!'})   
-        }
-    }, //função assíncrona para cadastrar os dados no banco de dados. 
+        const { 
+            title,
+            description,
+            image,
+            address,
+            phone,
+            extension,
+            workours,
+            position
+        } = request.body
 
-    deleteLocation : ( request, response ) => {
-        response.json({
-            message: 'Localização removida com sucesso!',
-            id:123
-        });
-    },    
-    
-    updateLocation : ( request, response ) => {
-        response.json({message: 'Localização alterada com sucesso!'});
+        const location = new model({
+            title,
+            description,
+            image,
+            address,
+            phone,
+            extension,
+            workours,
+            position
+          })
+          
+        await location.save().then(() => {
+            
+            response.status(200).json({ message: 'Location Added!' })
+            
+        }).catch((err) => {
+            
+            
+            response.status(500).json({ message: `Error: ${err}` })
+
+        })
     },
- }
+
+    //Editar uma localização
+    updateLocation : async (request, response) => {
+        
+        const id = request.params.id
+          
+        await model.updateOne({_id: id}, request.body).then(() => {
+            
+            response.status(200).json({ message: 'Location Updated!' })
+            
+        }).catch((err) => {
+            
+            
+            response.status(500).json({ message: `Error: ${err}` })
+
+        })
+
+    },
+
+    //Remover uma localização
+    deleteLocation : async (request, response) => {
+
+        const id = request.params.id
+
+        await model.deleteOne({_id: id}).then(() => {
+            
+            response.status(200).json({ message: 'Location Removed!' })
+            
+        }).catch((err) => {
+            
+            response.status(500).json({ message: `Error: ${err}` })
+
+        })
+    }
+}
 
 module.exports = locationController
