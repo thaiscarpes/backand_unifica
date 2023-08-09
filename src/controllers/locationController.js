@@ -47,8 +47,14 @@ const locationController = {
             phone,
             extension,
             workours,
-            position
+            latitude,
+            longitude
         } = request.body
+
+        const pointer = {
+            type: 'Point',
+            coordinates: [longitude, latitude],
+        }
 
         const location = new model({
             title,
@@ -58,7 +64,7 @@ const locationController = {
             phone,
             extension,
             workours,
-            position
+            pointer
           })
           
         await location.save().then(() => {

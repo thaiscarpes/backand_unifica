@@ -26,7 +26,7 @@ const userController = {
             userPasswd
         } = request.body
 
-        const encodedPassword = Buffer.from(userPasswd).toString('base64');
+        const encodedPassword = Buffer.from(userPasswd).toString('base64'); //criptografando a senha
 
         const user = new model({
             userName,

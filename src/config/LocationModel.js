@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');//Importa Mongoose
+const mongoose = require('mongoose'); //Importa Mongoose
+const pointerSchema = require('./utils/pointerSchema');
 
 // Esquema do modelo
 const locationSchema = new mongoose.Schema({
@@ -9,7 +10,10 @@ const locationSchema = new mongoose.Schema({
   phone: Number,
   extension: Number,
   workours: Array,
-  position: Array
+  pointer: {
+    type: pointerSchema,
+    index: '2dsphere'
+  }
 });
 
 // Modelo
