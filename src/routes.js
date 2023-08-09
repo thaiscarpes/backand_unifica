@@ -21,7 +21,7 @@ router.put('/location/:id', locationController.updateLocation)
 router.delete('/location/:id', locationController.deleteLocation)
 
 //Rota para calcular a distância do local ate o usuário
-router.get('/distance/:id', distanceController.getLocationDistance)
+router.get('/distance', distanceController.getLocationDistance)
 
 //Rota para listar os usuários
 router.get('/user', userController.listAllUsers)
